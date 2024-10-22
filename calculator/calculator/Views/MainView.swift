@@ -10,10 +10,6 @@ import SwiftUI
 struct MainView: View {
     @StateObject var viewModel = MainViewViewModel()
     
-    @State private var firstNumber = ""
-    @State private var secondNumber = ""
-    @State private var selection = 0
-    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -24,19 +20,21 @@ struct MainView: View {
                     ZStack {
                         PinkBaseView(width: 300, height: 80, cornerRadius: 15, color: Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
                         
-                        TextField("Input first number", text: $firstNumber)
+                        TextField("Input first number", text: $viewModel.firstNumber)
                             .textFieldStyle(.roundedBorder)
                             .padding(.horizontal, 30)
                             .opacity(0.6)
+
                     }
                     
                     Section {
-                        Picker(selection: $selection, label: Text("Select an operation")) {
+                        Picker(selection: $viewModel.selection, label: Text("Select an operation")) {
                             Text("Plus").tag(0)
                             Text("Minus").tag(1)
                         }
                         .pickerStyle(.segmented)
                         .colorMultiply(Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
+
                     }
                     .padding(.vertical, 10)
                     .padding(.horizontal, 100)
@@ -44,15 +42,16 @@ struct MainView: View {
                     ZStack {
                         PinkBaseView(width: 300, height: 80, cornerRadius: 15, color: Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
                         
-                        TextField("Input second number", text: $secondNumber)
+                        TextField("Input second number", text: $viewModel.secondNumber)
                             .textFieldStyle(.roundedBorder)
                             .padding(.horizontal, 30)
                             .opacity(0.6)
+
                     }
                     .padding(.bottom, 40)
                     
                     Button {
-                        viewModel.count(first: firstNumber, second: secondNumber, tag: selection)
+                        viewModel.count()
                     } label: {
                         ZStack {
                             PinkBaseView(width: 110, height: 30, cornerRadius: 6, color: Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
@@ -62,11 +61,14 @@ struct MainView: View {
                         }
                     }
                     
-                    Text(viewModel.result)
-                        .bold()
-                        .font(.title)
-                        .foregroundStyle(.white)
-                        .padding(.top, 40)
+                    if viewModel.flag {
+                        Text(viewModel.result)
+                            .bold()
+                            .font(.title)
+                            .foregroundStyle(Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
+                            .padding(.top, 40)
+                            .shadow(color: .white, radius: 4)
+                    }
                     
                     
                 }

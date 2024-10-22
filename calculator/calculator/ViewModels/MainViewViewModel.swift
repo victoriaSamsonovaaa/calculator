@@ -6,27 +6,32 @@
 //
 
 import Foundation
+import UIKit
 
 class MainViewViewModel: ObservableObject {
     
     @Published var result = ""
+    @Published var firstNumber = ""
+    @Published var secondNumber = ""
+    @Published var selection = 0
     
-    func count(first: String, second: String, tag: Int) {
-
-        guard let firstNumber = Int128(first), let secondNumber = Int128(second) else {
+    @Published var flag = true
+    
+    func count() {
+        guard let firstNumber = Decimal(string: firstNumber), let secondNumber = Decimal(string: secondNumber) else {
             result = "You can enter only numbers"
             return
         }
         
-        result = String(tag == 0 ? plus(first: firstNumber, second: secondNumber) : minus(first: firstNumber, second: secondNumber))
-        
+        var resultDecimal = selection == 0 ? plus(first: firstNumber, second: secondNumber) : minus(first: firstNumber, second: secondNumber)
+        result = NSDecimalString(&resultDecimal, nil)
     }
     
-    func plus(first: Int128, second: Int128) -> Int128 {
+    func plus(first: Decimal, second: Decimal) -> Decimal {
         return first + second
     }
     
-    func minus(first: Int128, second: Int128) -> Int128 {
+    func minus(first: Decimal, second: Decimal) -> Decimal {
         return first - second
     }
 }
