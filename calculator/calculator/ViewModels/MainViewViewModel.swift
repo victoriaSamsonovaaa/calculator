@@ -17,8 +17,21 @@ class MainViewViewModel: ObservableObject {
     @Published var showingView = false
     
     func count() {
-        let firstNumber = NSDecimalNumber(string: firstNumber)
-        let secondNumber = NSDecimalNumber(string: secondNumber)
+        
+        var first = firstNumber
+        var second = secondNumber
+        
+        if first.contains(",") {
+            first = first.replacingOccurrences(of: ",", with: ".")
+        }
+        
+        if second.contains(",") {
+            second = second.replacingOccurrences(of: ",", with: ".")
+        }
+        
+        let firstNumber = NSDecimalNumber(string: first)
+        let secondNumber = NSDecimalNumber(string: second)
+        
         
         if firstNumber == NSDecimalNumber.notANumber || secondNumber == NSDecimalNumber.notANumber {
             result = "You can enter only numbers"
