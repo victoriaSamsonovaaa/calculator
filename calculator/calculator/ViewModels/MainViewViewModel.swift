@@ -14,24 +14,30 @@ class MainViewViewModel: ObservableObject {
     @Published var firstNumber = ""
     @Published var secondNumber = ""
     @Published var selection = 0
-    
-    @Published var flag = true
+    @Published var showingView = false
     
     func count() {
-        guard let firstNumber = Decimal(string: firstNumber), let secondNumber = Decimal(string: secondNumber) else {
+        let firstNumber = NSDecimalNumber(string: firstNumber)
+        let secondNumber = NSDecimalNumber(string: secondNumber)
+        
+        if firstNumber == NSDecimalNumber.notANumber || secondNumber == NSDecimalNumber.notANumber {
             result = "You can enter only numbers"
             return
         }
         
-        var resultDecimal = selection == 0 ? plus(first: firstNumber, second: secondNumber) : minus(first: firstNumber, second: secondNumber)
-        result = NSDecimalString(&resultDecimal, nil)
+        let resultDecimal = selection == 0 ? plus(first: firstNumber, second: secondNumber) : minus(first: firstNumber, second: secondNumber)
+        result = resultDecimal.stringValue
     }
     
-    func plus(first: Decimal, second: Decimal) -> Decimal {
-        return first + second
+    func plus(first: NSDecimalNumber, second: NSDecimalNumber) -> NSDecimalNumber {
+        return first.adding(second)
     }
     
-    func minus(first: Decimal, second: Decimal) -> Decimal {
-        return first - second
+    func minus(first: NSDecimalNumber, second: NSDecimalNumber) -> NSDecimalNumber {
+        return first.subtracting(second)
+    }
+    
+    func tapInfo() {
+        showingView = true
     }
 }

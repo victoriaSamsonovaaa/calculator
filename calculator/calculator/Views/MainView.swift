@@ -13,10 +13,9 @@ struct MainView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                
                 PinkBaseView(width: 350, height: 600, cornerRadius: 15, color: Color(#colorLiteral(red: 0.9236200452, green: 0.7912103534, blue: 0.9181208014, alpha: 1)))
-                
                 VStack {
+                    
                     ZStack {
                         PinkBaseView(width: 300, height: 80, cornerRadius: 15, color: Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
                         
@@ -61,23 +60,29 @@ struct MainView: View {
                         }
                     }
                     
-                    if viewModel.flag {
-                        Text(viewModel.result)
-                            .bold()
-                            .font(.title)
-                            .foregroundStyle(Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
-                            .padding(.top, 40)
-                            .shadow(color: .white, radius: 4)
-                    }
-                    
+                    Text(viewModel.result)
+                        .bold()
+                        .font(.title2)
+                        .foregroundStyle(Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
+                        .padding(.top, 40)
+                        .shadow(color: .white, radius: 4)
                     
                 }
                 .padding(.horizontal, 40)
                 .padding(.top, 40)
                 .navigationTitle("Calculator")
-                
             }
-            
+            .sheet(isPresented: $viewModel.showingView) {
+                NameView(showing: $viewModel.showingView)
+            }
+            .toolbar {
+                ToolbarItem {
+                    Button("", systemImage: "info.circle") {
+                        viewModel.tapInfo()
+                    }
+                    .tint(Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
+                }
+            }
         }
     }
 }
