@@ -18,6 +18,13 @@ class MainViewViewModel: ObservableObject {
     
     func count() {
         
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.groupingSeparator = " "
+        formatter.groupingSize = 3
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 6
+        
         var first = firstNumber
         var second = secondNumber
         
@@ -38,8 +45,22 @@ class MainViewViewModel: ObservableObject {
             return
         }
         
-        let resultDecimal = selection == 0 ? plus(first: firstNumber, second: secondNumber) : minus(first: firstNumber, second: secondNumber)
-        result = resultDecimal.stringValue
+        switch selection {
+        case 0:
+            let resultDecimal = plus(first: firstNumber, second: secondNumber)
+            result = formatter.string(from: resultDecimal) ?? "Something went wrong"
+        case 1:
+            let resultDecimal = minus(first: firstNumber, second: secondNumber)
+            result = formatter.string(from: resultDecimal) ?? "Something went wrong"
+        case 2:
+            let resultDecimal = multiply(first: firstNumber, second: secondNumber)
+            result = formatter.string(from: resultDecimal) ?? "Something went wrong"
+        case 3:
+            let resultDecimal = divide(first: firstNumber, second: secondNumber)
+            result = formatter.string(from: resultDecimal) ?? "Something went wrong"
+        default:
+            result = "Something went wrong"
+        }
     }
     
     func plus(first: NSDecimalNumber, second: NSDecimalNumber) -> NSDecimalNumber {
@@ -48,6 +69,14 @@ class MainViewViewModel: ObservableObject {
     
     func minus(first: NSDecimalNumber, second: NSDecimalNumber) -> NSDecimalNumber {
         return first.subtracting(second)
+    }
+    
+    func multiply(first: NSDecimalNumber, second: NSDecimalNumber) -> NSDecimalNumber {
+        return first.multiplying(by: second)
+    }
+    
+    func divide(first: NSDecimalNumber, second: NSDecimalNumber) -> NSDecimalNumber {
+        return first.dividing(by: second)
     }
     
     func tapInfo() {

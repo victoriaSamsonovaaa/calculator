@@ -30,13 +30,15 @@ struct MainView: View {
                         Picker(selection: $viewModel.selection, label: Text("Select an operation")) {
                             Text("Plus").tag(0)
                             Text("Minus").tag(1)
+                            Text("Multiply").tag(2)
+                            Text("Divide").tag(3)
                         }
                         .pickerStyle(.segmented)
                         .colorMultiply(Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
 
                     }
                     .padding(.vertical, 10)
-                    .padding(.horizontal, 100)
+                    .padding(.horizontal, 40)
                     
                     ZStack {
                         PinkBaseView(width: 300, height: 80, cornerRadius: 15, color: Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
