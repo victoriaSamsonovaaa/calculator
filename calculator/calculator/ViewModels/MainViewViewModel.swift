@@ -36,6 +36,10 @@ class MainViewViewModel: ObservableObject {
             second = second.replacingOccurrences(of: ",", with: ".")
         }
         
+        if first.lowercased().contains("e") || second.lowercased().contains("e") {
+            result = "Экспоненциальная нотация не поддерживается"
+        }
+        
         let firstNumber = NSDecimalNumber(string: first)
         let secondNumber = NSDecimalNumber(string: second)
         
