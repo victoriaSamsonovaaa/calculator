@@ -1,6 +1,7 @@
 # calculator
-- Addition and subtraction operations
-- Input validation to ensure that only numbers are entered
-- Support for decimal numbers with both comma and dot as the decimal separator(validating function) Automatic conversion of decimal separator to a unified one (either dot or comma)
-- Result range validation to ensure that the result is within the range of -1,000,000,000,000.000000 to +1,000,000,000,000.000000
-- Info button that displays the developer's name and other information
+### This app is written using MVVM pattern. The main view of the app is the MainView class, which displays a user interface for inputting two numbers and selecting an operation. The MainViewViewModel class handles the logic for performing the calculation and updating the user interface.
+
+- This calculator app uses the `NSDecimalNumber` type to perform arithmetic operations on decimal numbers. When the user inputs a number, the app converts the input string to an `NSDecimalNumber` object. If the input string contains a decimal point, the app replaces it with a period to ensure that the number is parsed correctly. If the input string contains an exponent ("1.23e4"), the app displays an error message.
+- To display the result to the user, the app uses a `NumberFormatter` object to format the `NSDecimalNumber` object as a string. The `NumberFormatter` object is configured to use a decimal number style, with a grouping separator of a space character and a maximum of 6 decimal places. This allows the app to display large numbers in a more readable format.
+- The count method in the `MainViewViewModel` class is called when the user taps the "Count" button, and it performs the selected operation on the two input numbers. The result of the calculation is displayed in the user interface.
+- The app also includes a `PinkBaseView` struct, which is used to create a pink background view with rounded corners and a shadow. This view is used to create the background for the input fields and the "Count" button.
