@@ -13,54 +13,58 @@ struct MainView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                PinkBaseView(width: 350, height: 600, cornerRadius: 15, color: Color(#colorLiteral(red: 0.9236200452, green: 0.7912103534, blue: 0.9181208014, alpha: 1)))
+                PinkBaseView(width: 350, height: 650, cornerRadius: 15, color: Color(#colorLiteral(red: 0.9236200452, green: 0.7912103534, blue: 0.9181208014, alpha: 1)))
                 VStack {
                     
                     ZStack {
-                        PinkBaseView(width: 300, height: 80, cornerRadius: 15, color: Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
-                        
-                        TextField("Input first number", text: $viewModel.firstNumber)
-                            .textFieldStyle(.roundedBorder)
-                            .padding(.horizontal, 30)
-                            .opacity(0.6)
-
+                        PinkBaseView(width: 200, height: 50, cornerRadius: 15, color: Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
+                        TextFieldView(placeholder: "first number", text: $viewModel.firstNumber)
                     }
                     
-                    Section {
-                        Picker(selection: $viewModel.selection, label: Text("Select an operation")) {
-                            Text("Plus").tag(0)
-                            Text("Minus").tag(1)
-                            Text("Multiply").tag(2)
-                            Text("Divide").tag(3)
-                        }
-                        .pickerStyle(.segmented)
-                        .colorMultiply(Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
-
-                    }
-                    .padding(.vertical, 10)
-                    .padding(.horizontal, 40)
+                    PickerView(selection: $viewModel.selection1)
                     
                     ZStack {
-                        PinkBaseView(width: 300, height: 80, cornerRadius: 15, color: Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
-                        
-                        TextField("Input second number", text: $viewModel.secondNumber)
-                            .textFieldStyle(.roundedBorder)
-                            .padding(.horizontal, 30)
-                            .opacity(0.6)
-
+                        PinkBaseView(width: 200, height: 50, cornerRadius: 15, color: Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
+                        TextFieldView(placeholder: "second number", text: $viewModel.secondNumber)
                     }
-                    .padding(.bottom, 40)
+                    
+                    PickerView(selection: $viewModel.selection2)
+                    
+                    ZStack {
+                        PinkBaseView(width: 200, height: 50, cornerRadius: 15, color: Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
+                        TextFieldView(placeholder: "third number", text: $viewModel.thirdNumber)
+                    }
+                    
+                    PickerView(selection: $viewModel.selection3)
+                    
+                    ZStack {
+                        PinkBaseView(width: 200, height: 50, cornerRadius: 15, color: Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
+                        TextFieldView(placeholder: "fourth number", text: $viewModel.fourthNumber)
+                    }
                     
                     Button {
                         viewModel.count()
                     } label: {
                         ZStack {
-                            PinkBaseView(width: 110, height: 30, cornerRadius: 6, color: Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
+                            PinkBaseView(width: 220, height: 30, cornerRadius: 6, color: Color(#colorLiteral(red: 0.83298105, green: 0.3774057329, blue: 0.7425976396, alpha: 1)))
                             Text("Count")
                                 .foregroundStyle(Color.white)
                                 .bold()
                         }
+                        .padding(.top, 40)
                     }
+                    
+                    Section {
+                        Picker(selection: $viewModel.rounding, label: Text("Select a rounding")) {
+                            Text("Math").tag(0)
+                            Text("Accounting").tag(1)
+                            Text("Truncate").tag(2)
+                        }
+                        .pickerStyle(.segmented)
+                        .colorMultiply(Color(#colorLiteral(red: 0.83298105, green: 0.3774057329, blue: 0.7425976396, alpha: 1)))
+
+                    }
+                    .padding(.top, 10)
                     
                     Text(viewModel.result)
                         .bold()

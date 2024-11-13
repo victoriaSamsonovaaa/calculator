@@ -13,7 +13,13 @@ class MainViewViewModel: ObservableObject {
     @Published var result = ""
     @Published var firstNumber = ""
     @Published var secondNumber = ""
+    @Published var thirdNumber = ""
+    @Published var fourthNumber = ""
     @Published var selection = 0
+    @Published var selection1 = 0
+    @Published var selection2 = 0
+    @Published var selection3 = 0
+    @Published var rounding = 0
     @Published var showingView = false
     
     func count() {
