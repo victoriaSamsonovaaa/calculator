@@ -23,29 +23,22 @@ class MainViewViewModel: ObservableObject {
     @Published var roundingMode = 0
     
     
-    func processInputs(_ inputs: [String]) -> ([NSDecimalNumber], String?) {
+    func processInputs(_ inputs: [String]) -> [NSDecimalNumber] {
         var values = [NSDecimalNumber]()
-        var errorMessage: String?
-
+        
         let formatter = NumberFormatter()
         formatter.locale = Locale.current
         formatter.numberStyle = .decimal
-        formatter.maximumFractionDigits = 10
-
-
+        formatter.maximumFractionDigits = 6
+        
         let groupingSeparator = formatter.groupingSeparator ?? ","
         let decimalSeparator = formatter.decimalSeparator ?? "."
-
+        
         func processInput(_ input: String) -> NSDecimalNumber {
             let sanitizedInput = input
                 .replacingOccurrences(of: " ", with: "")
                 .replacingOccurrences(of: groupingSeparator, with: "")
                 .replacingOccurrences(of: decimalSeparator, with: ".")
-            
-//            let regex = "^-?\\d*(\\.\\d+)?$e"
-//            if !NSPredicate(format: "SELF MATCHES %@", regex).evaluate(with: sanitizedInput) {
-//                errorMessage = "Wrong format!"
-//            }
             
             return NSDecimalNumber(string: sanitizedInput)
         }
@@ -54,19 +47,13 @@ class MainViewViewModel: ObservableObject {
             let value = processInput(input)
             values.append(value)
         }
-
-        return (values, errorMessage)
+        
+        return values
     }
-    
-    
+
     func pressCount(sel1: Int, sel2: Int, sel3: Int, first: String, second: String, third: String, fourth: String, roundMode: Int) -> String {
         let inputs = [first, second, third, fourth]
-        let (inputsInDec, errorMessage) = processInputs(inputs)
-        
-        if let errorMessage = errorMessage {
-            self.result = errorMessage
-        }
-
+        let inputsInDec = processInputs(inputs)
         let selections = [sel1, sel2, sel3]
         let values = inputsInDec
 
@@ -77,29 +64,55 @@ class MainViewViewModel: ObservableObject {
         operations[1] = minus
         operations[2] = multiply
         operations[3] = divide
+        
+        var ans = NSDecimalNumber(0)
 
         guard let operationForSecondThird = operations[selections[1]],
-              let operationForFirstAndResult = operations[selections[0]],
-              let operationForResultAndFourth = operations[selections[2]] else {
-            print("mda")
-            let errorMessage = "Invalid selection"
-            self.result = errorMessage
-            return errorMessage
+              let operationForFirstAndSecondThird = operations[selections[0]],
+              let operationForSecondThirdAndFourth = operations[selections[2]] else {
+            result = "Invalid selection"
+            return result
         }
 
-        let secondThirdResult = operationForSecondThird(values[1] as NSDecimalNumber, values[2] as NSDecimalNumber)
+        let firstRes = operationForSecondThird(values[1], values[2])
+        if firstRes.compare(NSDecimalNumber.notANumber) == .orderedSame {
+            result = "Error(Division by zero)"
+            return result
+        }
         
-        let firstAndSecondThirdResult = operationForFirstAndResult(values[0] as NSDecimalNumber, secondThirdResult)
+        if selections[0] >= 2 {
+            let secondRes = operationForFirstAndSecondThird(values[0], firstRes)
+            if secondRes.compare(NSDecimalNumber.notANumber) == .orderedSame {
+                result = "Error(Division by zero)"
+                return result
+            }
+            let thirdRes = operationForSecondThirdAndFourth(secondRes, values[3])
+            if thirdRes.compare(NSDecimalNumber.notANumber) == .orderedSame {
+                result = "Error(Division by zero)"
+                return result
+            }
+            ans = thirdRes
+        }
         
-        var ans = operationForResultAndFourth(firstAndSecondThirdResult, values[3] as NSDecimalNumber)
-        
-        ans = myRound(inp: ans, mode: roundMode) as NSDecimalNumber
-        
-        let stringAns = ans.stringValue
-        print(stringAns)
-        return stringAns
+        else if selections[0] < 2 {
+            let secondRes = operationForSecondThirdAndFourth(firstRes, values[3])
+            if secondRes.compare(NSDecimalNumber.notANumber) == .orderedSame {
+                result = "Error(Division by zero)"
+                return result
+            }
+            let thirdRes = operationForFirstAndSecondThird(values[0], secondRes)
+            if thirdRes.compare(NSDecimalNumber.notANumber) == .orderedSame {
+                result = "Error(Division by zero)"
+                return result
+            }
+            ans = thirdRes
+        }
+
+        ans = roundDecimal(ans, mode: roundMode)
+        result = ans.stringValue
+        return result
     }
-    
+
     
     func plus(first: NSDecimalNumber, second: NSDecimalNumber) -> NSDecimalNumber {
         return first.adding(second)
@@ -114,25 +127,42 @@ class MainViewViewModel: ObservableObject {
     }
     
     func divide(first: NSDecimalNumber, second: NSDecimalNumber) -> NSDecimalNumber {
+        if second == NSDecimalNumber.zero {
+            return NSDecimalNumber.notANumber
+        }
         return first.dividing(by: second)
     }
 
-    func myRound(inp: NSDecimalNumber, mode: Int) -> Decimal {
-        var ans = inp.decimalValue
-        var roundingMode: NSDecimalNumber.RoundingMode
+    func roundDecimal(_ inp: NSDecimalNumber, mode: Int) -> NSDecimalNumber {
+        var roundingMode: Decimal.RoundingMode
         switch mode {
-        case 0: return ans
+        case 0: return inp
         case 1: roundingMode = .plain
         case 2: roundingMode = .bankers
         case 3: roundingMode = .down
-        default: return ans
+        default: return inp
         }
-        var result = Decimal()
-        NSDecimalRound(&result, &ans, 6, roundingMode)
-        return result
+
+        let inputDecimal = inp.decimalValue
+        let roundedDecimal = inputDecimal.rounded(6, roundingMode)
+        return NSDecimalNumber(decimal: roundedDecimal)
     }
     
     func tapInfo() {
         showingView = true
+    }
+}
+
+extension Decimal {
+    mutating func round(_ scale: Int, _ roundingMode: Decimal.RoundingMode) {
+        var localCopy = self
+        NSDecimalRound(&self, &localCopy, scale, roundingMode)
+    }
+
+    func rounded(_ scale: Int, _ roundingMode: Decimal.RoundingMode) -> Decimal {
+        var result = Decimal()
+        var localCopy = self
+        NSDecimalRound(&result, &localCopy, scale, roundingMode)
+        return result
     }
 }
