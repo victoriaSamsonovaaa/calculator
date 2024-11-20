@@ -13,7 +13,7 @@ struct MainView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                PinkBaseView(width: 350, height: 650, cornerRadius: 15, color: Color(#colorLiteral(red: 0.9236200452, green: 0.7912103534, blue: 0.9181208014, alpha: 1)))
+                PinkBaseView(width: 350, height: 670, cornerRadius: 15, color: Color(#colorLiteral(red: 0.9236200452, green: 0.7912103534, blue: 0.9181208014, alpha: 1)))
                 VStack {
                     
                     ZStack {
@@ -42,8 +42,22 @@ struct MainView: View {
                         TextFieldView(placeholder: "fourth number", text: $viewModel.fourthNumber)
                     }
                     
+                    Section {
+                        Picker(selection: $viewModel.rounding, label: Text("Select a rounding")) {
+                            Text("None").tag(0)
+                            Text("Plain").tag(1)
+                            Text("Bankers").tag(2)
+                            Text("Down").tag(3)
+                        }
+                        .pickerStyle(.segmented)
+                        .colorMultiply(Color(#colorLiteral(red: 0.83298105, green: 0.3774057329, blue: 0.7425976396, alpha: 1)))
+
+                    }
+                    .padding(.top, 40)
+                    
                     Button {
-                        viewModel.count()
+                        let ans = viewModel.pressCount(sel1: viewModel.selection1, sel2: viewModel.selection2, sel3: viewModel.selection3, first: viewModel.firstNumber, second: viewModel.secondNumber, third: viewModel.thirdNumber, fourth: viewModel.fourthNumber, roundMode: viewModel.roundingMode)
+                        viewModel.result = ans
                     } label: {
                         ZStack {
                             PinkBaseView(width: 220, height: 30, cornerRadius: 6, color: Color(#colorLiteral(red: 0.83298105, green: 0.3774057329, blue: 0.7425976396, alpha: 1)))
@@ -53,20 +67,8 @@ struct MainView: View {
                         }
                         .padding(.top, 40)
                     }
-                    
-                    Section {
-                        Picker(selection: $viewModel.rounding, label: Text("Select a rounding")) {
-                            Text("Math").tag(0)
-                            Text("Accounting").tag(1)
-                            Text("Truncate").tag(2)
-                        }
-                        .pickerStyle(.segmented)
-                        .colorMultiply(Color(#colorLiteral(red: 0.83298105, green: 0.3774057329, blue: 0.7425976396, alpha: 1)))
-
-                    }
-                    .padding(.top, 10)
-                    
-                    Text(viewModel.result)
+                                        
+                    Text("Result: \(viewModel.result)")
                         .bold()
                         .font(.title2)
                         .foregroundStyle(Color(#colorLiteral(red: 1, green: 0.5424868464, blue: 1, alpha: 1)))
@@ -75,7 +77,7 @@ struct MainView: View {
                     
                 }
                 .padding(.horizontal, 40)
-                .padding(.top, 40)
+                .padding(.top, 20)
                 .navigationTitle("Calculator")
             }
             .sheet(isPresented: $viewModel.showingView) {
