@@ -134,6 +134,7 @@ class MainViewViewModel: ObservableObject {
     }
 
     func roundDecimal(_ inp: NSDecimalNumber, mode: Int) -> NSDecimalNumber {
+        let scale = 6
         var roundingMode: Decimal.RoundingMode
         switch mode {
         case 0: return inp
@@ -144,7 +145,7 @@ class MainViewViewModel: ObservableObject {
         }
 
         let inputDecimal = inp.decimalValue
-        let roundedDecimal = inputDecimal.rounded(6, roundingMode)
+        let roundedDecimal = inputDecimal.rounded(scale, roundingMode)
         return NSDecimalNumber(decimal: roundedDecimal)
     }
     

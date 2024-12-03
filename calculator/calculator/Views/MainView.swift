@@ -56,7 +56,7 @@ struct MainView: View {
                     .padding(.top, 40)
                     
                     Button {
-                        let ans = viewModel.pressCount(sel1: viewModel.selection1, sel2: viewModel.selection2, sel3: viewModel.selection3, first: viewModel.firstNumber, second: viewModel.secondNumber, third: viewModel.thirdNumber, fourth: viewModel.fourthNumber, roundMode: viewModel.roundingMode)
+                        let ans = viewModel.pressCount(sel1: viewModel.selection1, sel2: viewModel.selection2, sel3: viewModel.selection3, first: viewModel.firstNumber, second: viewModel.secondNumber, third: viewModel.thirdNumber, fourth: viewModel.fourthNumber, roundMode: viewModel.rounding)
                         viewModel.result = ans
                     } label: {
                         ZStack {

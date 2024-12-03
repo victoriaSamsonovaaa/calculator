@@ -18,7 +18,3 @@ struct TextFieldView: View {
             .opacity(0.6)
     }
 }
-
-#Preview {
-    TextFieldView(placeholder: "Enter", text: .constant(""))
-}
