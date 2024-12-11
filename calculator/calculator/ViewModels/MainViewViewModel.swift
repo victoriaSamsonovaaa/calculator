@@ -164,7 +164,9 @@ class MainViewViewModel: ObservableObject {
         let decimalSeparator = "."
 
         let components = numberString.split(separator: ".", omittingEmptySubsequences: false)
-        guard let integerPart = components.first else { return numberString }
+        guard let integerPart = components.first else {
+            return numberString
+        }
         let fractionalPart = components.count > 1 ? String(components[1]) : ""
 
         let integerPartWithGrouping = addGroupingSeparators(to: String(integerPart), groupingSeparator: groupingSeparator)
